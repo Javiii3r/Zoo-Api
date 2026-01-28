@@ -1,0 +1,99 @@
+{
+    "info": {
+      "name": "Zoo Animals API",
+      "_postman_id": "12345678-abcd-1234-abcd-1234567890ab",
+      "description": "Colección para probar la API de animales del zoo",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Get All Animals",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/animals",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["animals"]
+          }
+        }
+      },
+      {
+        "name": "Get Animal by ID",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/animals/1",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["animals", "1"]
+          }
+        }
+      },
+      {
+        "name": "Create Animal",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"Simba\",\n  \"species\": \"León\",\n  \"habitat\": \"Sabana\",\n  \"age\": 5\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/animals",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["animals"]
+          }
+        }
+      },
+      {
+        "name": "Update Animal",
+        "request": {
+          "method": "PUT",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"Simba\",\n  \"species\": \"León\",\n  \"habitat\": \"Sabana\",\n  \"age\": 6\n}"
+          },
+          "url": {
+            "raw": "http://localhost:3000/animals/1",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["animals", "1"]
+          }
+        }
+      },
+      {
+        "name": "Delete Animal",
+        "request": {
+          "method": "DELETE",
+          "header": [],
+          "url": {
+            "raw": "http://localhost:3000/animals/1",
+            "protocol": "http",
+            "host": ["localhost"],
+            "port": "3000",
+            "path": ["animals", "1"]
+          }
+        }
+      }
+    ]
+  }
+  
