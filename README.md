@@ -33,7 +33,7 @@ Sigue estos pasos para tener la API corriendo en menos de 2 minutos:
 
 ### 1. Clonar el repositorio
 ```bash
-git clone [https://github.com/tu-usuario/zoo-api.git](https://github.com/tu-usuario/zoo-api.git)
+git clone [https://github.com/Javiilooppez/zoo-api.git](https://github.com/Javiilooppez/zoo-api.git)
 cd zoo-api
 
 ```
