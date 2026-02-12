@@ -12,6 +12,4 @@ if (argv.config != undefined) {
 
 const config = yaml.load(fs.readFileSync(configFile, 'utf-8'));
 
-module.exports = {
-    config
-};
+module.exports = config;

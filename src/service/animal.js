@@ -1,63 +1,59 @@
-const db = require('../configuration/database.js').db;
+const db = require('../configuration/database');
 
-const findAllAnimals = (async () => {
+const findAllAnimals = async () => {
     return await db('animales').select('*');
-});
+};
 
-const findAnimal = (async(id) => {
-    return await db('animales').select('*').where({id: id}).first();
-});
+const findAnimal = async (id) => {
+    return await db('animales').where({ id }).first();
+};
+
+const animalExistsById = async (id) => {
+    const animal = await db('animales').where({ id }).first();
+    return !!animal;
+};
+
+const animalExistsByName = async (nombre) => {
+    const animal = await db('animales').where({ nombre }).first();
+    return !!animal;
+};
+
 
 const addAnimal = async (nombre, especie, categoria, edad, estado_salud, descripcion, habitat_id) => {
-    return await db('animales').insert({
-        nombre: nombre,
-        especie: especie,
-        categoria: categoria,
-        edad: edad,
-        estado_salud: estado_salud,
-        descripcion: descripcion,
-        habitat_id: habitat_id
+    const [id] = await db('animales').insert({
+        nombre,
+        especie,
+        categoria,
+        edad,
+        estado_salud,
+        descripcion,
+        habitat_id
     });
+    return { id, nombre, especie, categoria, edad, estado_salud, descripcion, habitat_id };
 };
 
 const modifyAnimal = async (id, nombre, especie, categoria, edad, estado_salud, descripcion, habitat_id) => {
-    return await db('animales')
-        .where({ id: id })
-        .update({
-            nombre: nombre,
-            especie: especie,
-            categoria: categoria,
-            edad: edad,
-            estado_salud: estado_salud,
-            descripcion: descripcion,
-            habitat_id: habitat_id
-        });
+    return await db('animales').where({ id }).update({
+        nombre,
+        especie,
+        categoria,
+        edad,
+        estado_salud,
+        descripcion,
+        habitat_id
+    });
 };
 
 const removeAnimal = async (id) => {
-    return await db('animales').where({ id: id }).del();
+    return await db('animales').where({ id }).del();
 };
-
-const animalExistsById = (async(id) => {
-    const animal = await db('animales').select('*').where({id: id}).first();
-    return animal != null;
-});
-
-const animalExistsByName = (async(nombre) => {
-    const animal = await db('animales').select('*').where({nombre: nombre}).first();
-    if (animal === undefined) {
-        return false;
-    } else {
-        return true;
-    }
-});
 
 module.exports = {
     findAllAnimals,
     findAnimal,
+    animalExistsById,
+    animalExistsByName,
     addAnimal,
     modifyAnimal,
-    removeAnimal,
-    animalExistsById,
-    animalExistsByName
-}
+    removeAnimal
+};

@@ -1,0 +1,13 @@
+services:
+  db:
+    image: mariadb:11.3.2
+    container_name: animals-dev-db
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: animals
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d

@@ -1,7 +1,7 @@
-CREATE DATABASE zoo_db;
-USE zoo_db;
+CREATE DATABASE IF NOT EXISTS animals;
+USE animals;
 
-CREATE TABLE habitats (
+CREATE TABLE IF NOT EXISTS habitats (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT,
@@ -9,7 +9,7 @@ CREATE TABLE habitats (
     imagen_url VARCHAR(255)
 );
 
-CREATE TABLE animales (
+CREATE TABLE IF NOT EXISTS animales (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     especie VARCHAR(100) NOT NULL,
@@ -19,9 +19,9 @@ CREATE TABLE animales (
     descripcion TEXT,
     imagen_url VARCHAR(255),
     habitat_id INT NOT NULL,
-    
-    FOREIGN KEY (habitat_id) 
-        REFERENCES habitats(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    FOREIGN KEY (habitat_id) REFERENCES habitats(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+INSERT INTO habitats (id, nombre, descripcion, clima) VALUES 
+(1, 'Sabana Africana', 'Llanuras abiertas con pocos árboles', 'Cálido'),
+(2, 'Selva Tropical', 'Mucha vegetación y lluvia constante', 'Húmedo');
