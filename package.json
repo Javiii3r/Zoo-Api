@@ -1,0 +1,24 @@
+{
+  "name": "zoo-api",
+  "version": "1.0.0",
+  "description": "Repositorio en el cual creare la Api para el trabajo de  2º Evaluación.",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Javiilooppez/Zoo-Api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Javiilooppez/Zoo-Api/issues"
+  },
+  "homepage": "https://github.com/Javiilooppez/Zoo-Api#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
