@@ -1,0 +1,307 @@
+{
+	"info": {
+		"_postman_id": "def0ceb3-9597-4f31-bc0f-54f466157759",
+		"name": "Zoo API",
+		"description": "Colección completa para probar la API REST del zoológico con animales y hábitats",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3720353"
+	},
+	 "item": [
+    {
+      "name": "Animales",
+      "item": [
+        {
+          "name": "Obtener todos los animales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/animales",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "animales"
+              ]
+            },
+            "description": "Obtiene la lista completa de animales con su información de hábitat"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener animal por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/animales/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "animales",
+                "1"
+              ]
+            },
+            "description": "Obtiene la información detallada de un animal específico por su ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Crear nuevo animal",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Dumbo\",\n    \"especie\": \"Elefante africano\",\n    \"categoria\": \"Mamífero\",\n    \"edad\": 12,\n    \"estado_salud\": \"Saludable\",\n    \"descripcion\": \"Elefante africano macho de gran tamaño\",\n    \"imagen_url\": \"https://example.com/elefante.jpg\",\n    \"habitat_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/animales",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "animales"
+              ]
+            },
+            "description": "Crea un nuevo animal en la base de datos"
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar animal",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Simba Rey\",\n    \"especie\": \"León africano adulto\",\n    \"categoria\": \"Mamífero\",\n    \"edad\": 6,\n    \"estado_salud\": \"Saludable\",\n    \"descripcion\": \"León macho alfa del grupo\",\n    \"imagen_url\": \"https://example.com/leon-actualizado.jpg\",\n    \"habitat_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/animales/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "animales",
+                "1"
+              ]
+            },
+            "description": "Actualiza toda la información de un animal existente"
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar animal",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/animales/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "animales",
+                "4"
+              ]
+            },
+            "description": "Elimina un animal de la base de datos"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener animales por hábitat",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/animales/habitat/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "animales",
+                "habitat",
+                "1"
+              ]
+            },
+            "description": "Obtiene todos los animales que pertenecen a un hábitat específico"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Hábitats",
+      "item": [
+        {
+          "name": "Obtener todos los hábitats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/habitats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "habitats"
+              ]
+            },
+            "description": "Obtiene la lista completa de hábitats disponibles"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener hábitat por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/habitats/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "habitats",
+                "1"
+              ]
+            },
+            "description": "Obtiene la información detallada de un hábitat específico"
+          },
+          "response": []
+        },
+        {
+          "name": "Crear nuevo hábitat",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Bosque Tropical\",\n    \"descripcion\": \"Hábitat con vegetación densa y alta humedad\",\n    \"clima\": \"Tropical húmedo\",\n    \"imagen_url\": \"https://example.com/bosque-tropical.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/habitats",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "habitats"
+              ]
+            },
+            "description": "Crea un nuevo hábitat en la base de datos"
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar hábitat",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Sabana Africana Renovada\",\n    \"descripcion\": \"Hábitat de sabana africana con nuevas instalaciones\",\n    \"clima\": \"Tropical seco con estación lluviosa\",\n    \"imagen_url\": \"https://example.com/sabana-renovada.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/habitats/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "habitats",
+                "1"
+              ]
+            },
+            "description": "Actualiza la información de un hábitat existente"
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar hábitat",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/habitats/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "habitats",
+                "4"
+              ]
+            },
+            "description": "Elimina un hábitat de la base de datos"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener hábitat con animales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/habitats/1/animales",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "habitats",
+                "1",
+                "animales"
+              ]
+            },
+            "description": "Obtiene un hábitat específico junto con todos los animales que lo habitan"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-    "name": "animals-api",
+    "name": "zoo-backend",
     "scripts": {
         "start": "node src/app.js --config config.local.yaml"
     },

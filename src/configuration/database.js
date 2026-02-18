@@ -1,22 +1,17 @@
 const knex = require('knex');
-const fs = require('fs');
-const yaml = require('js-yaml');
-const path = require('path');
 
-const configPath = path.join(__dirname, '../../config.prod.yaml');
+const { config } = require('./configuration');
 
-try {
-    const fileContents = fs.readFileSync(configPath, 'utf8');
-    const config = yaml.load(fileContents);
+const db = knex({
+    client: 'mysql',
+    connection: {
+        host: config.db.host,
+        port: config.db.port,
+        user: config.db.user,
+        password: config.db.password,
+        database: config.db.database
+    },
+    useNullAsDefault: true
+});
 
-    if (!config || !config.db) {
-        throw new Error("No se pudo leer la sección 'db' del archivo YAML");
-    }
-
-    const db = knex(config.db);
-    module.exports = db;
-    console.log("✅ Conexión a la base de datos configurada correctamente.");
-} catch (e) {
-    console.error("❌ Error cargando la configuración:", e.message);
-    process.exit(1);
-}
+exports.db = db;
