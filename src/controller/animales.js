@@ -17,7 +17,7 @@ const getAnimales = async (req, res) => {
 };
 
 const getAnimal = async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     if (!await animalExistsById(id)) {
         return res.status(404).json({
@@ -50,24 +50,6 @@ const postAnimal = async (req, res) => {
         });
     }
 
-    const categorias_validas = ['Mamífero', 'Ave', 'Reptil', 'Anfibio', 'Pez'];
-    if (categoria && !categorias_validas.includes(categoria)) {
-        return res.status(400).json({
-            code: 400,
-            title: 'bad-request',
-            message: 'categoría no válida'
-        });
-    }
-
-    const estados_validos = ['Saludable', 'Requiere atención'];
-    if (estado_salud && !estados_validos.includes(estado_salud)) {
-        return res.status(400).json({
-            code: 400,
-            title: 'bad-request',
-            message: 'estado de salud no válido'
-        });
-    }
-
     const newAnimal = await addAnimal(
         nombre, 
         especie, 
@@ -83,7 +65,7 @@ const postAnimal = async (req, res) => {
 };
 
 const putAnimal = async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     
     if (!await animalExistsById(id)) {
         return res.status(404).json({
@@ -108,7 +90,7 @@ const putAnimal = async (req, res) => {
 };
 
 const deleteAnimal = async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     
     if (!await animalExistsById(id)) {
         return res.status(404).json({
@@ -123,7 +105,7 @@ const deleteAnimal = async (req, res) => {
 };
 
 const getAnimalesByHabitat = async (req, res) => {
-    const habitat_id = req.params.id;
+    const { id: habitat_id } = req.params;
     
     if (!await habitatExistsById(habitat_id)) {
         return res.status(404).json({

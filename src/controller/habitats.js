@@ -15,7 +15,7 @@ const getHabitats = async (req, res) => {
 };
 
 const getHabitat = async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
 
     if (!await habitatExistsById(id)) {
         return res.status(404).json({
@@ -45,7 +45,7 @@ const postHabitat = async (req, res) => {
 };
 
 const putHabitat = async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     
     if (!await habitatExistsById(id)) {
         return res.status(404).json({
@@ -61,7 +61,7 @@ const putHabitat = async (req, res) => {
 };
 
 const deleteHabitat = async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     
     if (!await habitatExistsById(id)) {
         return res.status(404).json({
@@ -76,7 +76,7 @@ const deleteHabitat = async (req, res) => {
 };
 
 const getHabitatWithAnimales = async (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     
     if (!await habitatExistsById(id)) {
         return res.status(404).json({
