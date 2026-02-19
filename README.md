@@ -182,5 +182,3 @@ zoo-api/
 ## 📝 Licencia
 
 Este proyecto es de código abierto y está disponible bajo la licencia **MIT**.
-
-**¡Disfruta construyendo tu aplicación web del zoológico v2!** 🦒🐧🦁
