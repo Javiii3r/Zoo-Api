@@ -1,13 +1,13 @@
 # 🦁 Zoo API v2 - API REST para Gestión de Zoológico
 
-API REST profesional y completa para la gestión de animales y hábitats de un zoológico, construida con **Node.js, Express 5, Knex y MariaDB**. La versión 2 introduce una arquitectura robusta con validación de datos avanzada y manejo global de errores.
+API REST profesional y completa para la gestión de animales y hábitats de un zoológico, construida con **Node.js, Express 5, Knex y MariaDB**. La versión 2 introduce una arquitectura robusta con búsqueda dinámica, validación de datos avanzada y gestión de integridad referencial.
 
 ---
 
 ## 📋 Características y Endpoints
 
 ### 🦒 Animales (CRUD Completo)
-- `GET /animales` - Obtener todos los animales (incluye información del hábitat vía JOIN).
+- `GET /animales` - Obtener todos los animales (incluye información del hábitat vía JOIN). **Soporta búsqueda por nombre** mediante `?nombre=`.
 - `GET /animales/:id` - Obtener un animal específico por su ID.
 - `GET /animales/habitat/:id` - Listar animales que pertenecen a un hábitat específico.
 - `POST /animales` - Crear un nuevo animal (**Validado por express-validator**).
@@ -15,12 +15,12 @@ API REST profesional y completa para la gestión de animales y hábitats de un z
 - `DELETE /animales/:id` - Eliminar un registro de la base de datos.
 
 ### 🌿 Hábitats (CRUD Completo)
-- `GET /habitats` - Obtener el listado de todos los hábitats.
+- `GET /habitats` - Obtener el listado de todos los hábitats. **Soporta búsqueda por nombre** mediante `?nombre=`.
 - `GET /habitats/:id` - Obtener un hábitat específico.
 - `GET /habitats/:id/animales` - Obtener un hábitat junto con su lista de animales residentes.
-- `POST /habitats` - Crear un nuevo hábitat (Validado).
+- `POST /habitats` - Crear un nuevo hábitat (Validado contra duplicados).
 - `PUT /habitats/:id` - Actualizar un hábitat existente.
-- `DELETE /habitats/:id` - Eliminar un hábitat.
+- `DELETE /habitats/:id` - Eliminar un hábitat. **Incluye gestión de integridad**: impide el borrado si existen animales asociados (Error 400).
 
 ---
 
@@ -29,7 +29,7 @@ API REST profesional y completa para la gestión de animales y hábitats de un z
 ### Requisitos Previos
 - **Node.js** (v18 o superior recomendado)
 - **Docker Desktop** instalado y corriendo
-- **Postman** (opcional, para pruebas rápidas)
+- **Postman** (para la ejecución de la suite de tests automáticos)
 
 ### Paso 1: Instalar Dependencias
 ```bash
@@ -73,12 +73,6 @@ docker-compose -f docker-compose.dev.yaml up -d
 
 ```
 
-Este comando automatiza:
-
-* Descarga de MariaDB 11.3.2.
-* Creación de la base de datos `zoo_db`.
-* Ejecución de `db/init.sql` (tablas y datos de ejemplo).
-
 ### Paso 4: Iniciar el Servidor de la API
 
 ```bash
@@ -86,65 +80,39 @@ npm start
 
 ```
 
-*Deberías ver: "Iniciando el backend en el puerto 8080"*
-
 ---
 
 ## 🧪 Pruebas y Validación
 
-### Validación de Datos (v2)
+### Validación de Datos e Integridad
 
-La API valida automáticamente los campos del body. Si envías datos incorrectos, recibirás un **Error 400 (Bad Request)** con el siguiente formato:
+La API valida automáticamente los campos y protege la base de datos:
 
-```json
-{
-  "code": 400,
-  "title": "bad-request",
-  "errors": [
-    { "type": "field", "msg": "Categoría no válida", "path": "categoria", "location": "body" }
-  ]
-}
+* **Búsqueda Dinámica:** Los listados permiten filtrar mediante el operador `LIKE` para coincidencias parciales.
+* **Integridad Referencial:** El sistema impide eliminar hábitats que contengan animales, devolviendo un error controlado.
+* **Manejo de Errores:** Respuestas estandarizadas para errores 400 (Bad Request), 404 (Not Found) y 409 (Conflict).
+
+### Colección de Postman (Tests Automáticos)
+
+El archivo `zoo.postman_collection.json` incluye scripts de prueba en JavaScript. Cada petición realiza al menos **3 tests automáticos**:
+
+1. **Status Code:** Verifica que el código HTTP sea el esperado (200, 201, 204, etc.).
+2. **Schema:** Valida que la respuesta sea un JSON con el formato correcto (Objeto o Array).
+3. **Data Integrity:** Comprueba que los valores devueltos (como nombres o IDs) coincidan con lo solicitado.
+
+### Ejemplos de cURL
+
+**Buscar animal por nombre:**
+
+```bash
+curl http://localhost:8080/animales?nombre=Simba
 
 ```
 
-### Ejemplos de cURL para Pruebas
-
-**Obtener todos los animales:**
+**Crear un hábitat:**
 
 ```bash
-curl http://localhost:8080/animales
-
-```
-
-**Crear un nuevo animal:**
-
-```bash
-curl -X POST http://localhost:8080/animales -H "Content-Type: application/json" -d "{\"nombre\":\"Nala\",\"especie\":\"Leona\",\"categoria\":\"Mamífero\",\"habitat_id\":1}"
-
-```
-
----
-
-## 🛠️ Comandos Útiles
-
-### Gestión de Docker
-
-* **Ver contenedores activos:** `docker ps`
-* **Ver logs de la base de datos:** `docker logs zoo-dev-db`
-* **Reiniciar base de datos (borra y recrea datos):**
-```bash
-docker-compose -f docker-compose.dev.yaml down -v
-docker-compose -f docker-compose.dev.yaml up -d
-
-```
-
-
-
-### Acceso Directo SQL
-
-```bash
-docker exec -it zoo-dev-db mysql -u zoo_user -p
-# Password: zoo_password_2026
+curl -X POST http://localhost:8080/habitats -H "Content-Type: application/json" -d "{\"nombre\":\"Sabana\",\"descripcion\":\"Bioma cálido\",\"clima\":\"Seco\"}"
 
 ```
 
@@ -158,24 +126,16 @@ zoo-api/
 │   └── init.sql              # Script de inicialización SQL
 ├── src/
 │   ├── configuration/        # Carga de YAML y conexión Knex
-│   ├── controller/           # Controladores (Lógica de negocio)
-│   ├── middlewares/          # ✦ NUEVO: errorHandler.js y validateResult.js
+│   ├── controller/           # Lógica: Gestión de búsqueda e integridad
+│   ├── middlewares/          # errorHandler.js y validateResult.js
 │   ├── route/                # Rutas con validadores inyectados
-│   ├── service/              # Capa de datos (Consultas Knex)
-│   ├── validators/           # ✦ NUEVO: Reglas de validación (animales/habitats)
+│   ├── service/              # Capa de datos: Consultas Knex dinámicas
+│   ├── validators/           # Reglas de validación (animales/habitats)
 │   └── app.js                # Entrada y Error Handler Global
 ├── docker-compose.dev.yaml   # Configuración de Docker
-└── zoo.postman_collection.json  # Colección para Postman
+└── zoo.postman_collection.json  # Suite de tests automáticos
 
 ```
-
----
-
-## 🐛 Solución de Problemas
-
-* **Error: "Cannot connect to database":** Verifica que Docker Desktop esté corriendo.
-* **Error: "Port 3306 already in use":** Tienes otro MySQL local activo; detén el servicio o cambia el puerto en `docker-compose.dev.yaml`.
-* **Error: "Port 8080 already in use":** Otra app usa el puerto 8080; cámbialo en `config.local.yaml`.
 
 ---
 
