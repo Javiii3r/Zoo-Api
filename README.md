@@ -4,21 +4,6 @@ API REST profesional y completa para la gestión de animales y hábitats de un z
 
 ---
 
-## 🏗️ Arquitectura en Capas (Novedad v2)
-
-Para garantizar la estabilidad y limpieza del código, la API se ha reestructurado en 5 capas transversales:
-
-
-
-1.  **Route:** Define los endpoints y asocia los middlewares necesarios.
-2.  **Validator (NUEVO):** Intercepta la petición y valida el esquema del body (tipos, longitudes y Enums) antes de llegar al controlador.
-3.  **Controller:** Gestiona la lógica de negocio, validando existencias (404) o conflictos (409) con la BD.
-4.  **Service:** Capa de persistencia que ejecuta las queries SQL mediante Knex.js.
-5.  **Database:** MariaDB 11.3.2 gestionada vía Docker.
-6.  **Error Handler (NUEVO):** Middleware global que captura cualquier excepción no controlada y responde con un código 500 estructurado.
-
----
-
 ## 📋 Características y Endpoints
 
 ### 🦒 Animales (CRUD Completo)
