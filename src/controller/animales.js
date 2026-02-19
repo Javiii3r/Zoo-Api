@@ -12,7 +12,11 @@ const {
 const { habitatExistsById } = require('../service/habitats');
 
 const getAnimales = async (req, res) => {
-    const animales = await findAllAnimales();
+
+    const { nombre } = req.query; 
+
+    const animales = await findAllAnimales({ nombre }); 
+    
     res.status(200).json(animales);
 };
 

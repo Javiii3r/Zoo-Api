@@ -1,7 +1,15 @@
 const { db } = require('../configuration/database');
 
-const findAllHabitats = async () => {
-    return await db('habitats').select('*');
+const findAllHabitats = async (filtros = {}) => {
+    const { nombre } = filtros;
+
+    let query = db('habitats').select('*');
+
+    if (nombre) {
+        query = query.where('nombre', 'like', `%${nombre}%`);
+    }
+
+    return await query;
 };
 
 const findHabitat = async (id) => {
@@ -41,21 +49,20 @@ const removeHabitat = async (id) => {
     await db('habitats').where({ id }).del();
 };
 
+const countAnimalesInHabitat = async (habitat_id) => {
+    const result = await db('animales')
+        .where({ habitat_id })
+        .count('id as total')
+        .first();
+    return result.total;
+};
+
 const findHabitatWithAnimales = async (id) => {
     const habitat = await db('habitats').where({ id }).first();
+    if (!habitat) return null;
     
-    if (!habitat) {
-        return null;
-    }
-    
-    const animales = await db('animales')
-        .where('habitat_id', id)
-        .select('*');
-    
-    return {
-        ...habitat,
-        animales
-    };
+    const animales = await db('animales').where('habitat_id', id).select('*');
+    return { ...habitat, animales };
 };
 
 module.exports = {
@@ -66,5 +73,6 @@ module.exports = {
     addHabitat,
     modifyHabitat,
     removeHabitat,
-    findHabitatWithAnimales
+    findHabitatWithAnimales,
+    countAnimalesInHabitat
 };

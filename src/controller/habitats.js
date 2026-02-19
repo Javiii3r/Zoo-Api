@@ -6,11 +6,13 @@ const {
     addHabitat,
     modifyHabitat,
     removeHabitat,
-    findHabitatWithAnimales
+    findHabitatWithAnimales,
+    countAnimalesInHabitat 
 } = require('../service/habitats');
 
 const getHabitats = async (req, res) => {
-    const habitats = await findAllHabitats();
+    const { nombre } = req.query;
+    const habitats = await findAllHabitats({ nombre });
     res.status(200).json(habitats);
 };
 
@@ -70,7 +72,16 @@ const deleteHabitat = async (req, res) => {
             message: 'el habitat no existe'
         });
     }
-    
+
+    const numAnimales = await countAnimalesInHabitat(id);
+    if (numAnimales > 0) {
+        return res.status(400).json({
+            code: 400,
+            title: 'bad-request',
+            message: `No se puede eliminar el hábitat porque todavía tiene ${numAnimales} animales asociados.`
+        });
+    }
+
     await removeHabitat(id);
     res.status(204).end();
 };

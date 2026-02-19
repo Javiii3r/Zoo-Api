@@ -1,13 +1,21 @@
 const { db } = require('../configuration/database');
 
-const findAllAnimales = async () => {
-    return await db('animales')
+const findAllAnimales = async (filtros = {}) => {
+    const { nombre } = filtros;
+
+    let query = db('animales')
         .join('habitats', 'animales.habitat_id', 'habitats.id')
         .select(
             'animales.*',
             'habitats.nombre as habitat_nombre',
             'habitats.clima as habitat_clima'
         );
+
+    if (nombre) {
+        query = query.where('animales.nombre', 'like', `%${nombre}%`);
+    }
+
+    return await query;
 };
 
 const findAnimal = async (id) => {
