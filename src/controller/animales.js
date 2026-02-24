@@ -1,24 +1,4 @@
-const { 
-    findAllAnimales, 
-    animalExistsById, 
-    animalExistsByName, 
-    modifyAnimal, 
-    addAnimal, 
-    removeAnimal, 
-    findAnimal,
-    findAnimalesByHabitat
-} = require('../service/animales');
-
-const { habitatExistsById } = require('../service/habitats');
-
-const getAnimales = async (req, res) => {
-
-    const { nombre } = req.query; 
-
-    const animales = await findAllAnimales({ nombre }); 
-    
-    res.status(200).json(animales);
-};
+/**\n * CONTROLADOR DE ANIMALES\n * =======================\n * Maneja las peticiones HTTP para el recurso /animales\n * Valida datos, comprueba integridad referencial y usa service para BD\n */\n\nconst { \n    findAllAnimales,      // Obtiene todos los animales (con búsqueda opcional)\n    animalExistsById,     // Valida si un animal existe por ID\n    animalExistsByName,   // Valida si existe un animal por nombre (evita duplicados)\n    modifyAnimal,         // Actualiza datos de animal\n    addAnimal,            // Crea nuevo animal\n    removeAnimal,         // Elimina animal\n    findAnimal,           // Obtiene un animal con datos del hábitat\n    findAnimalesByHabitat // Obtiene animales de un hábitat específico\n} = require('../service/animales');\n\nconst { habitatExistsById } = require('../service/habitats');\n\n/**\n * GET /animales\n * ==============\n * Obtiene listado de todos los animales\n * Soporta búsqueda por nombre mediante query param: ?nombre=león\n */\nconst getAnimales = async (req, res) => {\n    // Extrae parámetro de búsqueda (si existe)\n    const { nombre } = req.query; \n\n    // Obtiene animales de BD (con filtro LIKE si se proporciona nombre)\n    const animales = await findAllAnimales({ nombre }); \n    \n    // Retorna 200 OK con array de animales\n    res.status(200).json(animales);\n};
 
 const getAnimal = async (req, res) => {
     const { id } = req.params;

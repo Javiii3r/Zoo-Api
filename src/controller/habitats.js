@@ -1,21 +1,32 @@
+/**
+ * CONTROLADOR DE HABITATS
+ * =======================
+ * Maneja las peticiones HTTP para el recurso /habitats
+ * Valida datos, comprueba integridad referencial y usa service para BD
+ */
+
 const { 
-    findAllHabitats, 
-    findHabitat, 
-    habitatExistsById, 
-    habitatExistsByName,
-    addHabitat,
-    modifyHabitat,
-    removeHabitat,
-    findHabitatWithAnimales,
-    countAnimalesInHabitat 
+    findAllHabitats,          // Obtiene todos los habitats
+    findHabitat,              // Obtiene un habitat por ID
+    habitatExistsById,        // Valida si un habitat existe
+    habitatExistsByName,      // Valida si existe otro habitat con mismo nombre
+    addHabitat,               // Crea nuevo habitat
+    modifyHabitat,            // Actualiza habitat
+    removeHabitat,            // Elimina habitat de BD
+    findHabitatWithAnimales,  // Obtiene habitat con sus animales
+    countAnimalesInHabitat    // Cuenta cuantos animales hay en un habitat
 } = require('../service/habitats');
 
+// GET /habitats
+// Obtiene listado de todos los habitats (con busqueda por nombre opcional)
 const getHabitats = async (req, res) => {
     const { nombre } = req.query;
     const habitats = await findAllHabitats({ nombre });
     res.status(200).json(habitats);
 };
 
+// GET /habitats/:id
+// Obtiene un habitat especifico por su ID
 const getHabitat = async (req, res) => {
     const { id } = req.params;
 
@@ -31,6 +42,9 @@ const getHabitat = async (req, res) => {
     res.status(200).json(habitat);
 };
 
+// POST /habitats
+// Crea un nuevo habitat
+// Valida que el nombre sea unico (409 si ya existe)
 const postHabitat = async (req, res) => {
     const { nombre, descripcion, clima, imagen_url } = req.body;
 
@@ -43,9 +57,12 @@ const postHabitat = async (req, res) => {
     }
 
     const newHabitat = await addHabitat(nombre, descripcion, clima, imagen_url);
+    // Retorna 201 Created
     res.status(201).json(newHabitat);
 };
 
+// PUT /habitats/:id
+// Actualiza datos de un habitat existente
 const putHabitat = async (req, res) => {
     const { id } = req.params;
     
@@ -59,9 +76,13 @@ const putHabitat = async (req, res) => {
 
     const { nombre, descripcion, clima, imagen_url } = req.body;
     await modifyHabitat(id, nombre, descripcion, clima, imagen_url);
+    // Retorna 204 No Content
     res.status(204).end();
 };
 
+// DELETE /habitats/:id
+// Elimina un habitat (Solo si no tiene animales asociados)
+// Retorna 400 si hay animales en el habitat
 const deleteHabitat = async (req, res) => {
     const { id } = req.params;
     
@@ -74,6 +95,7 @@ const deleteHabitat = async (req, res) => {
     }
 
     const numAnimales = await countAnimalesInHabitat(id);
+    // Valida integridad referencial: no permite ciellos habitats con animales
     if (numAnimales > 0) {
         return res.status(400).json({
             code: 400,
@@ -86,6 +108,8 @@ const deleteHabitat = async (req, res) => {
     res.status(204).end();
 };
 
+    // GET /habitats/:id/animales
+// Obtiene un habitat con su lista de animales residentes
 const getHabitatWithAnimales = async (req, res) => {
     const { id } = req.params;
     
