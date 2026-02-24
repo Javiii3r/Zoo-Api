@@ -1,7 +1,10 @@
-/**\n * SERVICIO DE ANIMALES\n * ====================\n * Capa de acceso a datos (Data Access Layer) para tabla animales\n * Contiene todas las queries Knex para operaciones CRUD\n * Realiza JOINs con tabla habitats para obtener datos relacionados\n */\n\nconst { db } = require('../configuration/database');
+/**\n * SERVICIO DE ANIMALES\n * ====================\n * Capa de acceso a datos (Data Access Layer) para tabla animales\n * Contiene todas las queries Knex para operaciones CRUD\n * Realiza JOINs con tabla habitats para obtener datos relacionados\n */
 
 // Obtiene todos los animales con datos del habitat
 // Soporta filtro de busqueda por nombre (LIKE)
+
+const { db } = require('../configuration/database');
+
 const findAllAnimales = async (filtros = {}) => {
     const { nombre } = filtros;
 
@@ -31,7 +34,7 @@ const findAnimal = async (id) => {
             'habitats.clima as habitat_clima'
         )
         .where('animales.id', id)
-        .first();  // Retorna el primer resultado o undefined
+        .first(); // Retorna el primer resultado o undefined
 };
 
 // Valida si existe un animal con un ID especifico
