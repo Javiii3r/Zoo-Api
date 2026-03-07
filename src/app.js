@@ -6,11 +6,13 @@
  */
 
 const express = require('express');
+const cors = require('cors');
 const animalesRoute = require('./route/animales');
 const habitatsRoute = require('./route/habitats');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
+app.use(cors());
 
 // Middleware para parsear JSON en las peticiones
 app.use(express.json());
