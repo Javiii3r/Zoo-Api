@@ -1,121 +1,87 @@
-# 🦁 Zoo API v2 - API REST para Gestión de Zoológico
+<div align="center">
+   <h1>🦁 Zoo API</h1>
 
-API REST profesional y completa para la gestión de animales y hábitats de un zoológico, construida con **Node.js, Express 5, Knex y MariaDB**. 
+   ### API REST profesional para la gestión de animales y hábitats de un zoológico
 
-La versión 2 introduce una **arquitectura robusta de tres capas** (Controller → Service → Database), búsqueda dinámica con LIKE queries, validación avanzada de datos con express-validator, y gestión completa de integridad referencial.
+   [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18-339933.svg?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+   [![Express](https://img.shields.io/badge/Express-5.x-000000.svg?logo=express&logoColor=white)](https://expressjs.com/)
+   [![MariaDB](https://img.shields.io/badge/MariaDB-003545.svg?logo=mariadb&logoColor=white)](https://mariadb.com/)
+   [![Knex.js](https://img.shields.io/badge/Knex.js-Query%20Builder-e16426.svg)](https://knexjs.org/)
+   [![Docker](https://img.shields.io/badge/Docker-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com/)
+   [![express-validator](https://img.shields.io/badge/express--validator-7.x-blueviolet.svg)](https://express-validator.github.io/)
+   [![Postman](https://img.shields.io/badge/Postman-Ready-FF6C37.svg?logo=postman&logoColor=white)](https://www.postman.com/)
 
----
-
-## 📑 Tabla de Contenidos
-
-- [Características Principales](#características-principales)
-- [Endpoints Disponibles](#endpoints-disponibles)
-- [Requisitos Previos](#requisitos-previos)
-- [Instalación Rápida](#instalación-rápida)
-- [Ejemplos de Uso](#ejemplos-de-uso)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Pruebas Automáticas](#pruebas-automáticas)
-- [Solución de Problemas](#solución-de-problemas)
-
----
-
-## ✨ Características Principales
-
-- ✅ **Validación de datos** con express-validator
-- ✅ **Búsqueda dinámica** por nombre en animales y hábitats
-- ✅ **Integridad referencial** automática (previene inconsistencias)
-- ✅ **Paginación y filtrado** en listados
-- ✅ **Manejo centralizado de errores** con respuestas estandarizadas
-- ✅ **Tests automáticos** en Postman (3+ tests por endpoint)
-- ✅ **Arquitectura escalable** con patrón Service/Repository
+   <p align="center">
+      <strong>Una API REST robusta de tres capas</strong> para crear, consultar, actualizar y eliminar animales y hábitats de un zoológico, con persistencia en MariaDB (Docker), validación avanzada y una colección Postman lista para usar.
+   </p>
+</div>
 
 ---
 
-## 📋 Endpoints Disponibles
+## 📋 Descripción
 
-### 🦒 **Animales** - Gestión del Inventario
+**Zoo API** es una API REST backend desarrollada como proyecto de la **1ª Evaluación** del ciclo **DAW (Desarrollo de Aplicaciones Web)**. Implementa un CRUD completo sobre dos entidades relacionadas — `animales` y `habitats` —, aplicando una **arquitectura de tres capas** (Controller → Service → Database) y buenas prácticas del desarrollo web moderno.
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/animales` | Listar todos con soporte búsqueda: `?nombre=leon` |
-| `GET` | `/animales/:id` | Obtener detalles de un animal |
-| `GET` | `/animales/habitat/:habitatId` | Animales de un hábitat específico |
-| `POST` | `/animales` | Crear nuevo animal *(validado)* |
-| `PUT` | `/animales/:id` | Actualizar datos de animal |
-| `DELETE` | `/animales/:id` | Eliminar un animal |
+### Módulos principales
 
-**Campos requeridos en POST/PUT:**
-```json
-{
-  "nombre": "string (único, 1-100 chars)",
-  "especie": "string (1-100 chars)",
-  "edad": "number (0-150)",
-  "peso": "number (0.1-1000)",
-  "habitatId": "number (debe existir)"
-}
-```
+- **Routes** — Mapeo HTTP, inyección de validadores por endpoint
+- **Controllers** — Lógica de negocio, validación de resultados y respuestas HTTP
+- **Services** — Consultas SQL dinámicas con Knex.js (búsqueda LIKE, joins, filtros)
+- **Validators** — Reglas declarativas con express-validator
+- **Middlewares** — Manejo centralizado de errores y preprocesamiento de validaciones
 
-### 🌿 **Hábitats** - Gestión de Espacios
+## ✨ Características
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/habitats` | Listar todos con búsqueda: `?nombre=sabana` |
-| `GET` | `/habitats/:id` | Obtener un hábitat |
-| `GET` | `/habitats/:id/animales` | Hábitat + lista de animales |
-| `POST` | `/habitats` | Crear nuevo hábitat *(único)* |
-| `PUT` | `/habitats/:id` | Actualizar un hábitat |
-| `DELETE` | `/habitats/:id` | Eliminar hábitat ⚠️ *sin animales* |
+- 🐾 **CRUD Completo** — Crear, leer, actualizar y eliminar animales y hábitats
+- 🔗 **Integridad referencial** — Impide eliminar hábitats que contienen animales
+- 🔍 **Búsqueda dinámica** — Filtrado por nombre con queries LIKE (`?nombre=leon`)
+- ✅ **Validación avanzada** — Campos obligatorios, rangos numéricos y unicidad de nombre
+- 🗄️ **Base de datos MariaDB** — Gestionada con Docker y Knex.js como query builder
+- 📄 **Respuestas JSON estándar** — Códigos HTTP semánticos en cada situación
+- 📬 **Colección Postman incluida** — Suite de tests automáticos lista para importar
+- ⚙️ **Configuración YAML** — Separación clara entre entornos con `config.local.yaml`
+- 🧩 **Arquitectura escalable** — Patrón por capas: Routes → Controller → Service → DB
 
-**Campos requeridos en POST/PUT:**
-```json
-{
-  "nombre": "string (único, 1-100 chars)",
-  "descripcion": "string (0-500 chars)",
-  "clima": "string (ej: Tropical, Ártico)"
-}
-```
+## 🛠️ Tecnologías Utilizadas
 
----
+| Tecnología | Versión | Enlace |
+|------------|---------|--------|
+| **Node.js** | ≥ 18 LTS | [nodejs.org](https://nodejs.org/) |
+| **Express.js** | ^5.1.0 | [expressjs.com](https://expressjs.com/) |
+| **Knex.js** | ^3.1.0 | [knexjs.org](https://knexjs.org/) |
+| **MariaDB (mysql)** | ^2.18.1 | [mariadb.com](https://mariadb.com/) |
+| **express-validator** | ^7.0.0 | [express-validator.github.io](https://express-validator.github.io/) |
+| **js-yaml** | 4.1.1 | [npmjs.com](https://www.npmjs.com/package/js-yaml) |
+| **Docker Desktop** | Última | [docker.com](https://www.docker.com/) |
 
-## 🚀 Requisitos Previos
+## 📦 Requisitos Previos
 
-| Software | Versión | Propósito |
-|----------|---------|----------|
-| **Node.js** | ≥ 18 | Runtime de JavaScript |
-| **npm** | ≥ 9 | Gestor de dependencias |
-| **Docker Desktop** | Última | Contenedor MariaDB |
-| **Postman** | Última | Testing (opcional pero recomendado) |
+Antes de comenzar, asegúrate de tener instalado:
 
----
+| Requisito | Versión | Enlace |
+|-----------|---------|--------|
+| **Node.js** | ≥ 18 LTS | [Descargar](https://nodejs.org/) |
+| **npm** | Incluido con Node.js | — |
+| **Docker Desktop** | Última estable | [Descargar](https://www.docker.com/products/docker-desktop/) |
+| **Postman** (opcional) | Última estable | [Descargar](https://www.postman.com/downloads/) |
 
-## ⚡ Instalación Rápida
+## 🚀 Instalación y Arranque
 
-### 1️⃣ Instalar Dependencias
+### 1. Clona el Repositorio
 
 ```bash
-npm install
+git clone https://github.com/Javiii3r/ZooApi.git
+cd ZooApi
 ```
 
-Esto instala:
-- **express** v5 - Framework web
-- **knex** - Query builder SQL
-- **mariadb** - Driver de base de datos
-- **express-validator** - Validación de datos
-- **yaml** - Parseo de archivos de configuración
+### 2. Copia y edita la configuración
 
-### 2️⃣ Configurar Variables de Entorno
-
-Crea o edita los archivos de configuración con las credenciales (ya existen los templates):
-
-**Archivo: `.env`** (o en `.env.local`)
-```env
-MARIADB_USER=zoo_user
-MARIADB_PASSWORD=zoo_password_2026
-MARIADB_DATABASE=zoo_db
-MARIADB_ROOT_PASSWORD=root_password_2026
+```bash
+cp config.sample.yaml config.local.yaml
 ```
 
-**Archivo: `config.local.yaml`**
+Edita `config.local.yaml` con tus credenciales:
+
 ```yaml
 db:
   host: localhost
@@ -130,68 +96,221 @@ service:
   nodeEnv: development
 ```
 
-> **💡 Nota:** Para producción, cambiar `nodeEnv` a `production` y usar credenciales seguras.
+También crea o verifica el archivo `.env` para Docker:
 
-### 3️⃣ Iniciar la Base de Datos (Docker)
+```env
+MARIADB_USER=zoo_user
+MARIADB_PASSWORD=zoo_password_2026
+MARIADB_DATABASE=zoo_db
+MARIADB_ROOT_PASSWORD=root_password_2026
+```
+
+### 3. Levanta la Base de Datos (Docker)
 
 ```bash
-# Descargar imagen y crear contenedor MariaDB
 docker-compose -f docker-compose.dev.yaml up -d
 ```
 
-Verifica que está corriendo:
+Verifica que el contenedor está corriendo:
+
 ```bash
 docker ps
-# Deberías ver un contenedor con mariadb:latest
+# Deberías ver un contenedor con mariadb:latest en el puerto 3306
 ```
 
-Conexión: `localhost:3306` | Usuario: `zoo_user` | Contraseña: `zoo_password_2026`
+### 4. Instala las Dependencias
 
-### 4️⃣ Iniciar el Servidor
+```bash
+npm install
+```
+
+### 5. Inicia el Servidor
 
 ```bash
 npm start
 ```
 
-✅ **Servidor activo en:**
-```
-http://localhost:8080
-```
+✅ **La API estará disponible en** `http://localhost:8080`
 
-Para desarrollo con auto-reload (si está disponible):
-```bash
-npm run dev
-```
+> El script de inicialización SQL (`db/init.sql`) crea automáticamente las tablas `habitats` y `animales` en el primer arranque del contenedor.
 
 ---
+
+## 🔌 API — Endpoints
+
+Base URL: `http://localhost:8080`
+
+### 🌿 Hábitats
+
+| Método | Endpoint | Descripción | Código éxito |
+|--------|----------|-------------|:------------:|
+| `GET` | `/habitats` | Lista todos los hábitats (`?nombre=sabana`) | `200` |
+| `GET` | `/habitats/:id` | Obtiene un hábitat por ID | `200` |
+| `GET` | `/habitats/:id/animales` | Hábitat con su lista de animales | `200` |
+| `POST` | `/habitats` | Crea un nuevo hábitat | `201` |
+| `PUT` | `/habitats/:id` | Actualiza un hábitat existente | `200` |
+| `DELETE` | `/habitats/:id` | Elimina un hábitat ⚠️ *sin animales* | `204` |
+
+### 🐾 Animales
+
+| Método | Endpoint | Descripción | Código éxito |
+|--------|----------|-------------|:------------:|
+| `GET` | `/animales` | Lista todos los animales (`?nombre=leon`) | `200` |
+| `GET` | `/animales/:id` | Obtiene un animal por ID | `200` |
+| `GET` | `/animales/habitat/:habitatId` | Animales de un hábitat concreto | `200` |
+| `POST` | `/animales` | Crea un nuevo animal | `201` |
+| `PUT` | `/animales/:id` | Actualiza los datos de un animal | `200` |
+| `DELETE` | `/animales/:id` | Elimina un animal por ID | `204` |
+
+### Modelos de Datos
+
+**Hábitat**
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|:-----------:|-------------|
+| `id` | `integer` | Auto | Identificador único (autoincremental) |
+| `nombre` | `string` | ✅ | Nombre del hábitat (único, 1-100 chars) |
+| `descripcion` | `string` | ❌ | Descripción del espacio (máx. 500 chars) |
+| `clima` | `string` | ✅ | Tipo de clima (ej: Tropical, Ártico) |
+
+**Animal**
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|:-----------:|-------------|
+| `id` | `integer` | Auto | Identificador único (autoincremental) |
+| `nombre` | `string` | ✅ | Nombre del animal (único, 1-100 chars) |
+| `especie` | `string` | ✅ | Especie del animal (1-100 chars) |
+| `edad` | `integer` | ✅ | Edad en años (0-150) |
+| `peso` | `number` | ✅ | Peso en kg (0.1-1000) |
+| `habitatId` | `integer` | ✅ | ID del hábitat al que pertenece (debe existir) |
+
+### Ejemplos de Body (POST / PUT)
+
+**Hábitat:**
+```json
+{
+  "nombre": "Sabana Africana",
+  "descripcion": "Extensas llanuras con acacias y pastizales",
+  "clima": "Tropical"
+}
+```
+
+**Animal:**
+```json
+{
+  "nombre": "Simba",
+  "especie": "León",
+  "edad": 5,
+  "peso": 190,
+  "habitatId": 1
+}
+```
+
+### Códigos de Respuesta
+
+| Código | Cuándo ocurre |
+|--------|---------------|
+| `200 OK` | GET o PUT exitoso |
+| `201 Created` | POST exitoso, recurso creado |
+| `204 No Content` | DELETE exitoso |
+| `400 Bad Request` | Datos inválidos o hábitat con animales asociados |
+| `404 Not Found` | El recurso con ese ID no existe |
+| `409 Conflict` | Ya existe un registro con ese nombre |
+| `500 Server Error` | Error interno del servidor |
+
+---
+
+## 📁 Estructura del Proyecto
+
+```text
+ZooApi/
+│
+├── 📄 package.json                    # Dependencias y scripts npm
+├── 📄 docker-compose.dev.yaml         # Contenedor MariaDB para desarrollo
+│
+├── 🔧 config.sample.yaml              # Template de configuración (commitable)
+├── 🔧 config.local.yaml               # Configuración local (no commitar)
+├── 🔒 .env                            # Variables de entorno para Docker
+│
+├── 📋 zoo.postman_collection.json     # Suite de tests automáticos Postman
+├── 📄 README.md                       # Este archivo
+│
+├── 📁 db/
+│   └── init.sql                      # Script SQL: creación de tablas e índices
+│
+└── 📁 src/                            # Código fuente
+    ├── app.js                         # Punto de entrada — Express + rutas + middlewares
+    │
+    ├── configuration/
+    │   ├── configuration.js           # Carga y parseo del YAML de configuración
+    │   └── database.js                # Pool de conexiones Knex + MariaDB
+    │
+    ├── route/
+    │   ├── animales.js                # Rutas /animales con validadores
+    │   └── habitats.js                # Rutas /habitats con validadores
+    │
+    ├── controller/
+    │   ├── animales.js                # Lógica de control y respuestas HTTP de animales
+    │   └── habitats.js                # Lógica de control y respuestas HTTP de hábitats
+    │
+    ├── service/
+    │   ├── animales.js                # Queries SQL de animales (Knex)
+    │   └── habitats.js                # Queries SQL de hábitats (Knex)
+    │
+    ├── validators/
+    │   ├── animales.js                # Reglas de validación de animales
+    │   └── habitats.js                # Reglas de validación de hábitats
+    │
+    └── middlewares/
+        ├── errorHandler.js            # Manejo centralizado de errores
+        └── validateResult.js          # Procesamiento de resultados de validación
+```
+
+### Flujo de Datos
+
+```text
+Cliente HTTP / Postman
+         ↓
+   Express Router
+   (route/animales.js | route/habitats.js)
+         ↓
+   Validators (express-validator)
+   + validateResult middleware
+         ↓
+   Controller Layer
+   (controller/animales.js | controller/habitats.js)
+   Lógica de negocio + respuestas HTTP
+         ↓
+   Service Layer
+   (service/animales.js | service/habitats.js)
+   Queries dinámicas con Knex.js
+         ↓
+   MariaDB (Docker)
+   (zoo_db)
+```
 
 ---
 
 ## 📚 Ejemplos de Uso
 
-### Ejemplo 1: Crear un Hábitat
+### Crear un Hábitat
 
 ```bash
 curl -X POST http://localhost:8080/habitats \
   -H "Content-Type: application/json" \
   -d '{
     "nombre": "Sabana Africana",
-    "descripcion": "Hábitat savana con acacias y pastizales",
+    "descripcion": "Llanuras con acacias y pastizales",
     "clima": "Tropical"
   }'
 ```
 
 **Respuesta (201 Created):**
 ```json
-{
-  "id": 1,
-  "nombre": "Sabana Africana",
-  "descripcion": "Hábitat savana con acacias y pastizales",
-  "clima": "Tropical"
-}
+{ "id": 1, "nombre": "Sabana Africana", "descripcion": "Llanuras con acacias y pastizales", "clima": "Tropical" }
 ```
 
-### Ejemplo 2: Crear un Animal
+### Crear un Animal
 
 ```bash
 curl -X POST http://localhost:8080/animales \
@@ -207,37 +326,22 @@ curl -X POST http://localhost:8080/animales \
 
 **Respuesta (201 Created):**
 ```json
-{
-  "id": 1,
-  "nombre": "Simba",
-  "especie": "León",
-  "edad": 5,
-  "peso": 190,
-  "habitatId": 1
-}
+{ "id": 1, "nombre": "Simba", "especie": "León", "edad": 5, "peso": 190, "habitatId": 1 }
 ```
 
-### Ejemplo 3: Buscar Animales por Nombre
+### Buscar Animales por Nombre
 
 ```bash
-curl "http://localhost:8080/animales?nombre=leon"
+curl "http://localhost:8080/animales?nombre=simba"
 ```
 
-**Respuesta (200 OK):** Array con animales coincidentes
-
-### Ejemplo 4: Obtener Hábitat con sus Animales
+### Obtener Hábitat con sus Animales
 
 ```bash
 curl "http://localhost:8080/habitats/1/animales"
 ```
 
-### Ejemplo 5: Listar Todos los Hábitats
-
-```bash
-curl "http://localhost:8080/habitats"
-```
-
-### Ejemplo 6: Intentar Eliminar Hábitat con Animales
+### Intentar eliminar un Hábitat con Animales
 
 ```bash
 curl -X DELETE http://localhost:8080/habitats/1
@@ -245,162 +349,60 @@ curl -X DELETE http://localhost:8080/habitats/1
 
 **Respuesta (400 Bad Request):**
 ```json
-{
-  "error": "No se puede eliminar el hábitat. Contiene animales asociados."
-}
+{ "error": "No se puede eliminar el hábitat. Contiene animales asociados." }
 ```
 
 ---
 
-## 🧪 Pruebas Automáticas
+## 📬 Pruebas con Postman
 
-### Suite de Tests en Postman
+El proyecto incluye una colección Postman con **3+ tests automáticos por endpoint**:
 
-El archivo `zoo.postman_collection.json` contiene pruebas exhaustivas. Cada endpoint realiza **3+ tests**:
+```
+zoo.postman_collection.json
+```
 
-1. ✅ **Status Code** - Verifica el código HTTP correcto (200, 201, 204, 400, 404)
-2. ✅ **Response Schema** - Valida que sea JSON válido (Object o Array)
-3. ✅ **Data Integrity** - Comprueba valores esperados en la respuesta
-4. ✅ **Validation Rules** - Verifica validaciones de express-validator
+**Pasos para importarla:**
+1. Abre Postman
+2. Haz clic en **Import**
+3. Selecciona el archivo `zoo.postman_collection.json`
+4. Asegúrate de que el servidor está corriendo en `localhost:8080`
+5. Haz clic en los 3 puntos de la colección → **Run Collection**
 
-### Ejecución de Tests
+### Checklist de Validación
 
-1. **Importar colección en Postman:**
-   - Abre Postman
-   - Collections → Import → Selecciona `zoo.postman_collection.json`
+```text
+[ ] GET  /habitats                     → devuelve array de hábitats
+[ ] GET  /habitats/:id                 → devuelve el hábitat o 404
+[ ] GET  /habitats/:id/animales        → hábitat con lista de animales
+[ ] POST /habitats                     → crea y devuelve 201
+[ ] PUT  /habitats/:id                 → actualiza y devuelve 200
+[ ] DELETE /habitats/:id (sin anim.)  → elimina y devuelve 204
+[ ] DELETE /habitats/:id (con anim.)  → devuelve 400
 
-2. **Ejecutar toda la suite:**
-   - Click en los 3 puntos de la colección → **Run Collection**
-   - Se ejecutarán todos los tests automáticamente
+[ ] GET  /animales                     → devuelve array de animales
+[ ] GET  /animales?nombre=xxx          → filtra por nombre (LIKE)
+[ ] GET  /animales/:id                 → devuelve el animal o 404
+[ ] GET  /animales/habitat/:id         → animales del hábitat
+[ ] POST /animales                     → crea y devuelve 201
+[ ] PUT  /animales/:id                 → actualiza y devuelve 200
+[ ] DELETE /animales/:id               → elimina y devuelve 204
 
-3. **Ver resultados:**
-   - Postman mostrará ✅ o ❌ para cada test
-   - Revisa la pestaña "Tests" en cada petición para más detalles
+[ ] POST sin campos obligatorios       → devuelve 400
+[ ] POST con nombre duplicado          → devuelve 409 conflict
+[ ] POST con habitatId inexistente     → devuelve 400/404
+```
 
-### Tests Incluidos
+### Tests Incluidos por Recurso
 
 | Recurso | Tests |
 |---------|-------|
-| **Hábitats - GET** | Status 200, JSON Array, Búsqueda LIKE |
-| **Hábitats - POST** | Status 201, Campos requeridos, Nombres únicos |
-| **Hábitats - DELETE** | Status 400 si hay animales, Status 204 si está vacío |
-| **Animales - GET** | Status 200, Incluye datos de hábitat, Búsqueda por nombre |
-| **Animales - POST** | Status 201, Validación de edades, Validación de pesos |
-| **Animales - PUT** | Status 200, Actualización parcial, Validación de datos |
-
----
-
-## 🏗️ Arquitectura del Proyecto
-
-### Patrón MVC + Service Layer
-
-```
-┌─────────────────────────────────┐
-│  ROUTES (route/animales.js)     │  ← Definición de endpoints
-└──────────────┬──────────────────┘
-               │
-        ┌──────▼──────────────────┐
-        │ CONTROLLERS             │  ← Lógica de negocio
-        │ (ctrl/animales.js)      │
-        └──────┬──────────────────┘
-               │
-        ┌──────▼──────────────────┐
-        │ SERVICES               │  ← Acceso a datos
-        │ (service/animales.js)  │
-        └──────┬──────────────────┘
-               │
-        ┌──────▼──────────────────┐
-        │ DATABASE (Knex/MariaDB) │  ← Persistencia
-        └─────────────────────────┘
-```
-
-### Componentes Principales
-
-| Archivo | Responsabilidad |
-|---------|-----------------|
-| `app.js` | Inicialización Express, rutas, middleware global |
-| `route/` | Mapeo HTTP → Controller, inyección de validadores |
-| `controller/` | Parsing de request, llamadas a servicios, respuestas |
-| `service/` | Queries SQL dinámicas, lógica de datos |
-| `validators/` | Reglas de validación con express-validator |
-| `middlewares/` | Error centr.izado, validación de results |
-| `configuration/` | Carga de config YAML, Pool de conexiones Knex |
-
----
-
-## 📁 Estructura del Proyecto
-
-```
-Zoo-Api/
-├── 📄 package.json                    # Dependencias y scripts
-├── 📄 docker-compose.dev.yaml         # Configuración Docker
-│
-├── 🔧 config.sample.yaml              # Template de configuración
-├── 🔧 config.local.yaml               # Configuración local (no commitar)
-│
-├── 📋 zoo.postman_collection.json     # Suite de tests automáticos
-├── 📄 README.md                       # Este archivo
-│
-├── 📁 db/                             # Inicialización de Base de Datos
-│   └── init.sql                       # Script SQL: tablas, índices
-│
-└── 📁 src/                            # Código fuente
-    ├── app.js                         # Entrada principal
-    │
-    ├── configuration/
-    │   ├── configuration.js           # Carga de YAML
-    │   └── database.js                # Configuración de Knex
-    │
-    ├── controller/
-    │   ├── animales.js                # Lógica de animales
-    │   └── habitats.js                # Lógica de hábitats
-    │
-    ├── service/
-    │   ├── animales.js                # Queries animales
-    │   └── habitats.js                # Queries hábitats
-    │
-    ├── route/
-    │   ├── animales.js                # Rutas /animales
-    │   └── habitats.js                # Rutas /habitats
-    │
-    ├── validators/
-    │   ├── animales.js                # Reglas validación
-    │   └── habitats.js                # Reglas validación
-    │
-    └── middlewares/
-        ├── errorHandler.js            # Manejo centralizado de errores
-        └── validateResult.js          # Procesamiento de validaciones
-```
-
----
-
-## ✅ Validación y Manejo de Errores
-
-### Reglas de Validación
-
-**Animales:**
-- `nombre` - Requerido, único, 1-100 caracteres
-- `especie` - Requerido, 1-100 caracteres
-- `edad` - Número entre 0-150
-- `peso` - Número entre 0.1-1000 kg
-- `habitatId` - Número, debe existir en BD
-
-**Hábitats:**
-- `nombre` - Requerido, único, 1-100 caracteres
-- `descripcion` - Opcional, máximo 500 caracteres
-- `clima` - Requerido, 1-100 caracteres
-
-### Códigos de Estado HTTP
-
-| Código | Significado | Ejemplo |
-|--------|------------|---------|
-| `200` | OK - Petición exitosa | GET /animales |
-| `201` | Created - Recurso creado | POST /habitats |
-| `204` | No Content - Eliminado | DELETE /animales/:id |
-| `400` | Bad Request - Datos inválidos | Hábitat con animales |
-| `404` | Not Found - Recurso no existe | GET /animales/999 |
-| `409` | Conflict - Violación de constraints | Nombre duplicado |
-| `500` | Server Error - Error interno | Error de BD |
+| **Hábitats — GET** | Status 200, JSON Array, Búsqueda LIKE |
+| **Hábitats — POST** | Status 201, Campos obligatorios, Unicidad de nombre |
+| **Hábitats — DELETE** | Status 400 si hay animales, Status 204 si está vacío |
+| **Animales — GET** | Status 200, Incluye datos, Búsqueda por nombre |
+| **Animales — POST** | Status 201, Validación de edad, Validación de peso |
+| **Animales — PUT** | Status 200, Actualización correcta, Validación de datos |
 
 ---
 
@@ -408,93 +410,89 @@ Zoo-Api/
 
 ### ❌ `Error: connect ECONNREFUSED 127.0.0.1:3306`
 
-**Problema:** MariaDB no está corriendo.
+**Causa:** MariaDB no está corriendo.
 
-**Solución:**
 ```bash
-# Verificar contenedores Docker
 docker ps -a
-
-# Si no está corriendo, iniciar
 docker-compose -f docker-compose.dev.yaml up -d
-
-# Ver logs del contenedor
 docker logs <container_id>
 ```
 
 ### ❌ `Error: YAML config file not found`
 
-**Problema:** El archivo de configuración no existe.
+**Causa:** Falta el archivo `config.local.yaml`.
 
-**Solución:**
 ```bash
-# Copiar el template
 cp config.sample.yaml config.local.yaml
-
-# Editar con tus credenciales
+# Edita con tus credenciales
 ```
 
-### ❌ `ValidationError: campo "nombre" ya existe`
+### ❌ `409 Conflict` al crear un recurso
 
-**Problema:** Intentas crear un registro con nombre duplicado.
+**Causa:** Ya existe un registro con ese nombre.
 
-**Solución:**
-- Usa un nombre único
-- Verifica que no exista en la BD: `GET /animales?nombre=XXX`
+- Verifica con `GET /animales?nombre=XXX` o `GET /habitats?nombre=XXX`
+- Usa un nombre diferente o elimina el duplicado primero
 
-### ❌ `Cannot DELETE /habitats/1 - Error 400`
+### ❌ `400 Bad Request` al eliminar un hábitat
 
-**Problema:** Intenta eliminar hábitat con animales.
+**Causa:** El hábitat tiene animales asociados.
 
-**Solución:**
-- Primero, mueve los animales a otro hábitat
-- O elimina los animales: `DELETE /animales/:id`
-- Luego elimina el hábitat
+1. Mueve o elimina los animales del hábitat
+2. Vuelve a intentar el `DELETE /habitats/:id`
 
 ### ❌ Puerto 8080 ya en uso
 
-**Problema:** Otra aplicación está usando el puerto.
-
-**Solución:**
 ```bash
-# Cambiar puerto en config.local.yaml
+# Cambia el puerto en config.local.yaml:
 service:
-  port: 8081  # Nuevo puerto
+  port: 8081
 
-# O matar el proceso
-# Windows:
+# O en Windows, libera el puerto:
 netstat -ano | findstr :8080
 taskkill /PID <PID> /F
 ```
 
 ### ❌ `npm: no se reconoce el comando`
 
-**Problema:** Node.js no está instalado.
-
-**Solución:**
-1. Descargar desde https://nodejs.org/ (≥18 LTS)
-2. Instalar
-3. Verificar: `node -v && npm -v`
-4. Ejecutar `npm install` de nuevo
+1. Descarga Node.js ≥ 18 desde [nodejs.org](https://nodejs.org/)
+2. Instala y verifica: `node -v && npm -v`
+3. Ejecuta `npm install` de nuevo
 
 ---
 
-## 📚 Recursos Adicionales
+## 👤 Autor
 
-### Documentación Oficial
-- [Express.js](https://expressjs.com/) - Framework web
-- [Knex.js](https://knexjs.org/) - Query builder
-- [express-validator](https://express-validator.github.io/docs/) - Validación
-- [MariaDB](https://mariadb.com/docs/) - Base de datos
+<div align="center">
+   <table>
+      <tr>
+         <td align="center">
+            <a href="https://github.com/Javiii3r">
+               <img src="https://avatars.githubusercontent.com/u/232877625?v=4" width="100px;" alt="Javi"/><br />
+               <sub><b>Javi</b></sub>
+            </a>
+            <br />
+            <p><strong>Full Stack Developer</strong></p>
+         </td>
+      </tr>
+   </table>
+</div>
 
-### Cómo Contribuir
+## 🏆 Créditos y Agradecimientos
 
-1. Fork el repositorio
-2. Crea una rama: `git checkout -b feature/nueva-funcionalidad`
-3. Realiza cambios y testa (`npm test`)
-4. Commit: `git commit -am "Agregar feature"`
-5. Push: `git push origin feature/nueva-funcionalidad`
-6. Abre un Pull Request
+<div align="center">
+   <p>Proyecto desarrollado como parte de la <strong>1ª Evaluación</strong> del ciclo formativo <strong>DAW — Desarrollo de Aplicaciones Web</strong>.</p>
+
+   **Desarrollado con ❤️ para Zoo API**
+
+   ---
+
+   Agradecimientos a:
+   - **Express.js** — Por su simplicidad y potencia como framework HTTP
+   - **Knex.js** — Por hacer las consultas SQL elegantes y mantenibles
+   - **express-validator** — Por las validaciones declarativas y limpias
+   - **La comunidad open source** — Por las herramientas e inspiración
+</div>
 
 ---
 
