@@ -1,0 +1,258 @@
+{
+  "info": {
+    "_postman_id": "def0ceb3-9597-4f31-bc0f-54f466157759",
+    "name": "Zoo API - Final con Tests",
+    "description": "Colección completa con tests integrados y buscador para Animales y Hábitats",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Animales",
+      "item": [
+        {
+          "name": "Obtener todos los animales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', () => pm.response.to.have.status(200));",
+                  "pm.test('La respuesta es un array', () => pm.expect(pm.response.json()).to.be.an('array'));",
+                  "pm.test('Los elementos tienen campos de hábitat (JOIN)', () => {",
+                  "    const data = pm.response.json();",
+                  "    if(data.length > 0) pm.expect(data[0]).to.have.property('habitat_nombre');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/animales"
+          }
+        },
+        {
+          "name": "Obtener animal por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Es un objeto único', () => pm.expect(pm.response.json()).to.be.an('object'));",
+                  "pm.test('El ID coincide con el solicitado', () => pm.expect(pm.response.json().id).to.eql(1));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/animales/1"
+          }
+        },
+        {
+          "name": "Crear nuevo animal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 201 (Creado)', () => pm.response.to.have.status(201));",
+                  "pm.test('Retorna el objeto creado con ID', () => pm.expect(pm.response.json()).to.have.property('id'));",
+                  "pm.test('El nombre guardado es correcto', () => pm.expect(pm.response.json().nombre).to.eql('Dumbo'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Dumbo\",\n    \"especie\": \"Elefante africano\",\n    \"categoria\": \"Mamífero\",\n    \"edad\": 12,\n    \"estado_salud\": \"Saludable\",\n    \"descripcion\": \"Elefante africano macho de gran tamaño\",\n    \"imagen_url\": \"https://example.com/elefante.jpg\",\n    \"habitat_id\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "http://localhost:8080/animales"
+          }
+        },
+        {
+          "name": "Actualizar animal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 204', () => pm.response.to.have.status(204));",
+                  "pm.test('La respuesta debe estar vacía', () => pm.expect(pm.response.text()).to.be.empty);",
+                  "pm.test('Header de conexión presente', () => pm.expect(pm.response.headers.get('Connection')).to.exist);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Simba Rey\",\n    \"especie\": \"León africano\",\n    \"categoria\": \"Mamífero\",\n    \"edad\": 6,\n    \"habitat_id\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "http://localhost:8080/animales/1"
+          }
+        },
+        {
+          "name": "Eliminar animal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 204', () => pm.response.to.have.status(204));",
+                  "pm.test('Sin cuerpo en respuesta', () => pm.expect(pm.response.text()).to.be.empty);",
+                  "pm.test('Respuesta rápida', () => pm.expect(pm.response.responseTime).to.be.below(500));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:8080/animales/4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hábitats",
+      "item": [
+        {
+          "name": "Obtener todos los hábitats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status es 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Respuesta es array', () => pm.expect(pm.response.json()).to.be.an('array'));",
+                  "pm.test('Campos correctos', () => {",
+                  "    const data = pm.response.json();",
+                  "    if(data.length > 0) pm.expect(data[0]).to.have.all.keys('id', 'nombre', 'descripcion', 'clima', 'imagen_url');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/habitats"
+          }
+        },
+        {
+          "name": "Buscar hábitat por nombre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code es 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Filtro aplicado', () => {",
+                  "    const data = pm.response.json();",
+                  "    if(data.length > 0) pm.expect(data[0].nombre.toLowerCase()).to.include('sabana');",
+                  "});",
+                  "pm.test('Es una lista de resultados', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/habitats?nombre=Sabana",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["habitats"],
+              "query": [{ "key": "nombre", "value": "Sabana" }]
+            }
+          }
+        },
+        {
+          "name": "Crear nuevo hábitat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Objeto tiene ID', () => pm.expect(pm.response.json()).to.have.property('id'));",
+                  "pm.test('Nombre correcto', () => pm.expect(pm.response.json().nombre).to.eql('Jungla'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Jungla\",\n    \"descripcion\": \"Zona tropical densa\",\n    \"clima\": \"Húmedo\",\n    \"imagen_url\": \"http://img.com/jungla.jpg\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "http://localhost:8080/habitats"
+          }
+        },
+        {
+          "name": "Actualizar hábitat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code 204', () => pm.response.to.have.status(204));",
+                  "pm.test('Cuerpo vacío', () => pm.expect(pm.response.text()).to.be.empty);",
+                  "pm.test('Server header presente', () => pm.expect(pm.response.headers.get('Server')).to.exist);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Sabana Actualizada\",\n    \"descripcion\": \"Nueva descripción\",\n    \"clima\": \"Cálido\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "http://localhost:8080/habitats/1"
+          }
+        },
+        {
+          "name": "Eliminar hábitat (Test Integridad)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const status = pm.response.code;",
+                  "pm.test('Status es 204 o 400 (Integridad)', () => pm.expect(status).to.be.oneOf([204, 400]));",
+                  "if(status === 400) {",
+                  "    pm.test('Mensaje de error indica animales', () => pm.expect(pm.response.json().message).to.include('animales'));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:8080/habitats/1"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,17 +1,32 @@
+/**
+ * PUNTO DE ENTRADA DE LA APLICACIÓN ZOO API
+ * ==========================================
+ * Archivo principal que configura Express, monta las rutas y middlewares
+ * Escucha en puerto 8080
+ */
+
 const express = require('express');
+const cors = require('cors');
+const animalesRoute = require('./route/animales');
+const habitatsRoute = require('./route/habitats');
+const errorHandler = require('./middlewares/errorHandler');
+
 const app = express();
-const animalRoutes = require('./route/animal');
-const habitatRoutes = require('./route/habitat');
-const PORT = 3000;
+app.use(cors());
 
-app.use(express.json()); 
+// Middleware para parsear JSON en las peticiones
+app.use(express.json());
 
-app.use('/api/animals', animalRoutes);
-app.use('/api/habitats', habitatRoutes);
+// Monta las rutas de animales en /animales
+app.use('/animales', animalesRoute);
 
-app.listen(PORT, () => {
-    console.log(`🦁 Zoo API corriendo en http://localhost:${PORT}`);
+// Monta las rutas de hábitats en /habitats
+app.use('/habitats', habitatsRoute);
+
+// Middleware global de manejo de errores (debe ir al final)
+app.use(errorHandler);
+
+// Inicia el servidor en puerto 8080
+app.listen(8080, () => {
+    console.log("Iniciando el backend en el puerto 8080");
 });
-
-//El archivo app.js es el "interruptor" de la Api.
-// Su función principal es agrupar todas las piezas que hemos fabricado y mantener el servidor activo hasta que alguien le pida algo.
